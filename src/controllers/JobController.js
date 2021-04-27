@@ -43,22 +43,25 @@ module.exports = {
     show(req, res){
 
         const jobId = req.params.id
+        const jobs = Job.get();
+        const profile = Profile.get();
         
-        const job = Job.data.find( job => Number(job.id) === Number(jobId))
+        const job = jobs.find( job => Number(job.id) === Number(jobId))
 
         if (!job) {
          return res.send('Não encontrado')   
         }
 
-        job.budget = Job.serives.calculateBudget(job, Profile.data["value-hour"])
+        job.budget = JobUtils.calculateBudget(job, profile["value-hour"])
 
         return res.render( 'job-edit',{ job })
     },
     update(req, res){
 
         const jobId = req.params.id
+        const jobs = Job.get();
 
-        const job = Job.data.find( job => Number(job.id) === Number(jobId))
+        const job = jobs.find( job => Number(job.id) === Number(jobId))
 
         if(!job) {
             return res.send('Valor não encontrado')
@@ -71,19 +74,22 @@ module.exports = {
             "daily-hours": req.body["daily-hours"],
         }
 
-        Job.data = Job.data.map( job => {
+        const newJobs = jobs.map( job => {
             
             if( Number(job.id) === Number(jobId)) {
                 job = updateJob
             }
             return job
         })
-        res.redirect('job/'+jobId)
+
+        Job.update(newJobs)
+
+        res.redirect(jobId)
     },
     delete (req,res ) {
-        const jobId = req.params.id
+        const jobId = req.params.id       
 
-        Job.data = Job.data.filter(job => Number(job.id) !== Number(jobId))
+        Job.delete(jobId)
 
         return res.redirect('/')
     }
