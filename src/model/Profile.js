@@ -1,20 +1,42 @@
+const Database = require('../db/config')
 
-let data = {
-        name: 'Lucas',
-        avatar: 'https://mlohrktvfr9b.i.optimole.com/scftOdE.Oppq~1677e/w:600/h:600/q:82/https://www.nerdstickers.com.br/wp-content/uploads/2020/12/adesivo-extreme-go-horse-ns.png',
-        "monthly-budget": 3000,
-        "days-per-week": 5,
-        "hours-per-day": 5,
-        "vacation-per-year": 4,
-        "value-hour": 15
-    };
 
 
     module.exports = {
-        get(){
-            return data;
+
+        async get(){
+
+            const db = await Database()
+
+            const data = await db.get(`select * from profile`)
+
+            db.close(data)
+
+            return {
+                name: data.name,
+                avatar: data.avatar,
+                "monthly-budget": data.monthly_budget,
+                "days-per-week": data.days_per_week,
+                "hours-per-day": data.hours_per_day,
+                "vaction-per-day": data.vacation_per_day,
+                "value-hour": data.value_hour
+
+            };
         },
-        update(newData){
-            data = newData;
+        async update(newData){
+           
+            const db = await Database()
+
+            db.run(`UPDATE profile SET 
+            name = '${newData.name}',
+            avatar = '${newData.avatar}',
+            monthly_budget = '${newData["monthly-budget"]}',
+            days_per_week = '${newData["days-per-week"]}',
+            hours_per_day = '${newData["hours-per-day"]}',
+            vacation_per_year = '${newData["vacation-per-year"]}',
+            value_hour = '${newData["value-hour"]}'
+            `)
+
+            await db.close()
         }
     }

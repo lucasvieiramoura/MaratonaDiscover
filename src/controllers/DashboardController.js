@@ -3,10 +3,10 @@ const JobUtils = require('../utils/JobUtils')
 const Profile = require('../model/Profile')
 
 module.exports = {
-    index(req, res)  {
+    async index(req, res)  {
     
-    const jobs = Job.get();
-    const profile = Profile.get();
+    const jobs = await Job.get();
+    const profile = await Profile.get();
 
         let statusCount = {
             progress: 0,
@@ -22,13 +22,13 @@ module.exports = {
             
             const remaining = JobUtils.remainingDays(job)
             const status = remaining <= 0 ? 'done' : 'progress'
-
+            
             //statusCunt[done || progress ] soma na linha 12 ou 13 
             // +=1  a + a = result  1 + 1 
             statusCount[status] += 1;
 
             // Total de horas por dia de cada job em progress
-            jobTotalHours = status == 'progress' ? jobTotalHours + Number(job["daily-hours"]) : jobTotalHours
+            jobTotalHours = status == 'progress' ? Number(jobTotalHours) + Number(job["daily-hours"]) : Number(jobTotalHours)
 
             return {
                 ...job,

@@ -6,26 +6,21 @@ module.exports = {
     create(req, res) {
         return res.render( "job")
     },
-    save(req,res){
-
-        const jobs = Job.get();
-
-            const lastId = jobs[jobs.length -1]?.id || 1;
-
-            Job.create({
-                id: lastId + 1,
+    async save(req,res){
+            await Job.create({
                 name: req.body.name,
                 "daily-hours": req.body["daily-hours"],
                 "total-hours": req.body["total-hours"],
-                create_at: Date.now()
+                created_at: Date.now()
             });
+
             return res.redirect('/')
     },
-    show(req, res){
+    async show(req, res){
 
         const jobId = req.params.id
-        const jobs = Job.get();
-        const profile = Profile.get();
+        const jobs = await Job.get();
+        const profile = await Profile.get();
         
         const job = jobs.find( job => Number(job.id) === Number(jobId))
 
