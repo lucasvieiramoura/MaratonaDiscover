@@ -28,7 +28,6 @@ module.exports = {
             name = '${updateJob.name}',
             daily_hours = ${updateJob["daily-hours"]},
             total_hours = ${updateJob["total-hours"]}
-            
             WHERE id = ${jobId}
         `)
 

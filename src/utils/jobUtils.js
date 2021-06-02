@@ -14,7 +14,7 @@ module.exports = {
         // dias em mili segundos
         const dayInMs =  1000 * 60 * 60 * 24
         // Math.Floor arredondadmento para baixo
-        const dayDiff = Math.floor(timeDiffInMs / dayInMs)
+        const dayDiff = Math.ceil(timeDiffInMs / dayInMs)
     
         // restam x dias
         return dayDiff
